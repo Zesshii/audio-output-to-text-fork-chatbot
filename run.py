@@ -21,7 +21,7 @@ def capture_audio_output(audio_queue: mp.Queue,
 def speech_to_text(audio_queue: mp.Queue,
                    sample_rate: int) -> None:
     NO_LOG: int = -1
-    MODEL_PATH = "model-en"
+    MODEL_PATH = "model-en-md"
     
     vosk.SetLogLevel(NO_LOG)
     
