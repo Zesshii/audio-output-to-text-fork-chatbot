@@ -5,6 +5,13 @@ import numpy as np
 import soundcard as sc
 import sounddevice as sd
 import vosk
+import speech_recognition as sr
+from datetime import datetime as dt
+
+r = sr.Recognizer()
+
+now = dt.now()
+time = now.strftime("%d/%m/%y %H:%M:%S")
 
 def capture_audio_output(audio_queue: mp.Queue,
                          capture_sec: float,
@@ -22,6 +29,7 @@ def speech_to_text(audio_queue: mp.Queue,
                    sample_rate: int) -> None:
     NO_LOG: int = -1
     MODEL_PATH = "model-en-md"
+    FILE = "speech.json"
     
     vosk.SetLogLevel(NO_LOG)
     
@@ -37,16 +45,33 @@ def speech_to_text(audio_queue: mp.Queue,
         audio = map(lambda x: (x+1)/2, audio)
         audio = np.fromiter(audio, np.float16)
         audio = audio.tobytes()
-        
+
         if recognizer.AcceptWaveform(audio):
             result: json = json.loads(recognizer.Result())
             text = result["text"]
             
             if text != "":
-                print(text)
+                # write text to json file
+                try:
+                    # get the old data
+                    with open(FILE, mode='r', encoding='utf-8') as data:
+                        file_data = json.load(data)
+
+                    # append the new data
+                    with open(FILE, mode='w', encoding='utf-8') as new_data:
+                        new_text = {
+                            'datetime': time,
+                            'text': text
+                        }
+                        file_data.append(new_text)
+                        json.dump(file_data, new_data)
+
+                except FileNotFoundError:
+                    print("File not found...")
+
 
 def main():
-    CAPTURE_SEC: int = 0.4
+    CAPTURE_SEC: float = 0.4
     
     audio_queue: mp.Queue = mp.Queue()
     sample_rate: int = int(sd.query_devices(kind="output")["default_samplerate"])
