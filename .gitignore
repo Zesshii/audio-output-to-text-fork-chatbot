@@ -1208,3 +1208,4 @@ tags
 # Persistent undo
 [._]*.un~
 
+/model-en-lg/
