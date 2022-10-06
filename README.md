@@ -1,4 +1,6 @@
 # audio-output-to-text
+Note: This fork adds the vosk english model and instead of printing the text, it saves text into a json file.
+
 スピーカーやヘッドフォンから出力される話し声のオフライン文字起こしです。
 文字起こしされた結果はターミナルに表示されます。
 音声認識にはVOSKを用いています。
