@@ -21,7 +21,7 @@ def capture_audio_output(audio_queue: mp.Queue,
 def speech_to_text(audio_queue: mp.Queue,
                    sample_rate: int) -> None:
     NO_LOG: int = -1
-    MODEL_PATH = "model"
+    MODEL_PATH = "model-en"
     
     vosk.SetLogLevel(NO_LOG)
     
@@ -40,7 +40,7 @@ def speech_to_text(audio_queue: mp.Queue,
         
         if recognizer.AcceptWaveform(audio):
             result: json = json.loads(recognizer.Result())
-            text = result["text"].replace(" ", "")
+            text = result["text"]
             
             if text != "":
                 print(text)
